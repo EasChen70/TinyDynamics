@@ -1,0 +1,22 @@
+[build-system]
+requires = ["scikit-build-core>=0.10", "pybind11>=2.12"]
+build-backend = "scikit_build_core.build"
+
+[project]
+name = "tinydynamics"
+version = "0.1.0"
+description = "Simulated pan/tilt servo plant (MG90S kinematic model) for LookAt."
+requires-python = ">=3.9"
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[tool.scikit-build]
+minimum-version = "build-system.requires"
+# Pure-Python package shell; the compiled _core extension is added by CMake install().
+wheel.packages = ["python/tinydynamics"]
+# Build only the bindings when driven by pip; the C++ test executables stay a plain-CMake concern.
+cmake.define = { TD_BUILD_PYTHON = "ON", TD_BUILD_TESTS = "OFF" }
+
+[tool.pytest.ini_options]
+testpaths = ["python/tests"]

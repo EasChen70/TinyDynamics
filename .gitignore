@@ -13,3 +13,12 @@ CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 Makefile
+
+# Python bindings / packaging
+__pycache__/
+*.pyd
+*.so
+*.egg-info/
+_skbuild/
+dist/
+.pytest_cache/
