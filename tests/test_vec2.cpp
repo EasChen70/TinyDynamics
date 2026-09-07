@@ -1,5 +1,6 @@
 #include <cassert>
 #include <iostream>
+#include <cmath>
 
 #include "td/Vec2.h"
 
@@ -25,7 +26,7 @@ void testArithmetic(){
     assert(c.nearlyEqual(Vec2(2.0f, 6.0f)));
 
     c = b / 2.0f;
-    assert(c.nearlyEqual(Vec2(2.0, 2.0f)));
+    assert(c.nearlyEqual(Vec2(2.0f, 2.0f)));
 }
 
 void testCompoundArithmetic(){
