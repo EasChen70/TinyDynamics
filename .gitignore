@@ -1,5 +1,15 @@
-
 build/
+
 .vscode/
 .cache/
+
 .DS_Store
+
+*.exe
+*.obj
+*.pdb
+
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
