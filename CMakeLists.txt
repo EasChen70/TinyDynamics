@@ -16,17 +16,19 @@ target_include_directories(tinydynamics
 add_executable(test_vec2
     tests/test_vec2.cpp
 )
-
 target_link_libraries(test_vec2 PRIVATE tinydynamics)
 
 add_executable(test_particle
     tests/test_particle.cpp
 )
-
 target_link_libraries(test_particle PRIVATE tinydynamics)
 
 add_executable(test_rotational_body
     tests/test_rotational_body.cpp
 )
-
 target_link_libraries(test_rotational_body PRIVATE tinydynamics)
+
+add_executable(test_damping
+    tests/test_damping.cpp
+)
+target_link_libraries(test_damping PRIVATE tinydynamics)
