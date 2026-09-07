@@ -32,3 +32,13 @@ add_executable(test_damping
     tests/test_damping.cpp
 )
 target_link_libraries(test_damping PRIVATE tinydynamics)
+
+add_executable(test_actuator
+    tests/test_actuator.cpp
+)
+target_link_libraries(test_actuator PRIVATE tinydynamics)
+
+add_executable(test_pan_tilt_sim
+    tests/test_pan_tilt_sim.cpp
+)
+target_link_libraries(test_pan_tilt_sim PRIVATE tinydynamics)
