@@ -32,6 +32,7 @@ if(TD_BUILD_TESTS)
         damping
         actuator
         pan_tilt_sim
+        raycast
     )
 
     foreach(name IN LISTS TD_TESTS)
