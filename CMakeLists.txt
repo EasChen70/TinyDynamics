@@ -20,40 +20,25 @@ target_include_directories(tinydynamics
 )
 
 if(TD_BUILD_TESTS)
-    add_executable(test_vec2
-        tests/test_vec2.cpp
-    )
-    target_link_libraries(test_vec2 PRIVATE tinydynamics)
+    enable_testing()
 
-    add_executable(test_vec3
-        tests/test_vec3.cpp
+    # Each name builds tests/test_<name>.cpp into test_<name> and registers it
+    # with CTest. Adding a test file means adding one name here.
+    set(TD_TESTS
+        vec2
+        vec3
+        particle
+        rotational_body
+        damping
+        actuator
+        pan_tilt_sim
     )
-    target_link_libraries(test_vec3 PRIVATE tinydynamics)
 
-    add_executable(test_particle
-        tests/test_particle.cpp
-    )
-    target_link_libraries(test_particle PRIVATE tinydynamics)
-
-    add_executable(test_rotational_body
-        tests/test_rotational_body.cpp
-    )
-    target_link_libraries(test_rotational_body PRIVATE tinydynamics)
-
-    add_executable(test_damping
-        tests/test_damping.cpp
-    )
-    target_link_libraries(test_damping PRIVATE tinydynamics)
-
-    add_executable(test_actuator
-        tests/test_actuator.cpp
-    )
-    target_link_libraries(test_actuator PRIVATE tinydynamics)
-
-    add_executable(test_pan_tilt_sim
-        tests/test_pan_tilt_sim.cpp
-    )
-    target_link_libraries(test_pan_tilt_sim PRIVATE tinydynamics)
+    foreach(name IN LISTS TD_TESTS)
+        add_executable(test_${name} tests/test_${name}.cpp)
+        target_link_libraries(test_${name} PRIVATE tinydynamics)
+        add_test(NAME ${name} COMMAND test_${name})
+    endforeach()
 endif()
 
 if(TD_BUILD_PYTHON)

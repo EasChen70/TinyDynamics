@@ -1,4 +1,4 @@
-#include <cassert>
+#include "TestCheck.h"
 #include <cmath>
 #include <iostream>
 
@@ -17,12 +17,12 @@ void testDefaultsMatchDatasheet() {
     ServoActuator servo;
 
     // Defaults encode the MG90S spec at 4.8 V.
-    assert(nearlyEqual(servo.minAngle, 0.0f));
-    assert(nearlyEqual(servo.maxAngle, PI));
-    assert(nearlyEqual(servo.maxAngularVelocity, 9.5f));
-    assert(nearlyEqual(servo.angularDeadband, 0.016f));
-    assert(nearlyEqual(servo.currentAngle, 0.0f));
-    assert(nearlyEqual(servo.angularVelocity, 0.0f));
+    CHECK(nearlyEqual(servo.minAngle, 0.0f));
+    CHECK(nearlyEqual(servo.maxAngle, PI));
+    CHECK(nearlyEqual(servo.maxAngularVelocity, 9.5f));
+    CHECK(nearlyEqual(servo.angularDeadband, 0.016f));
+    CHECK(nearlyEqual(servo.currentAngle, 0.0f));
+    CHECK(nearlyEqual(servo.angularVelocity, 0.0f));
 }
 
 
@@ -30,13 +30,13 @@ void testTargetClampsToTravelRange() {
     ServoActuator servo;
 
     servo.setTargetAngle(-1.0f);
-    assert(nearlyEqual(servo.targetAngle, servo.minAngle));
+    CHECK(nearlyEqual(servo.targetAngle, servo.minAngle));
 
     servo.setTargetAngle(10.0f);
-    assert(nearlyEqual(servo.targetAngle, servo.maxAngle));
+    CHECK(nearlyEqual(servo.targetAngle, servo.maxAngle));
 
     servo.setTargetAngle(1.0f);
-    assert(nearlyEqual(servo.targetAngle, 1.0f));
+    CHECK(nearlyEqual(servo.targetAngle, 1.0f));
 }
 
 
@@ -48,8 +48,8 @@ void testNoMotionInsideDeadband() {
     servo.update(0.01f);
 
     // Error below deadband: servo holds position and reports zero velocity.
-    assert(nearlyEqual(servo.currentAngle, 1.0f));
-    assert(nearlyEqual(servo.angularVelocity, 0.0f));
+    CHECK(nearlyEqual(servo.currentAngle, 1.0f));
+    CHECK(nearlyEqual(servo.angularVelocity, 0.0f));
 }
 
 
@@ -61,7 +61,7 @@ void testMotionJustOutsideDeadband() {
     servo.update(0.01f);
 
     // Error above deadband: servo moves.
-    assert(servo.currentAngle > 1.0f);
+    CHECK(servo.currentAngle > 1.0f);
 }
 
 
@@ -71,7 +71,7 @@ void testVelocityNeverExceedsLimit() {
 
     for (int i = 0; i < 200; ++i) {
         servo.update(0.001f);
-        assert(std::abs(servo.angularVelocity) <= servo.maxAngularVelocity + EPSILON);
+        CHECK(std::abs(servo.angularVelocity) <= servo.maxAngularVelocity + EPSILON);
     }
 }
 
@@ -85,7 +85,7 @@ void testSmallStepCompletesInOneUpdate() {
     servo.update(dt);
 
     // Reachable within one step: servo lands exactly on target.
-    assert(nearlyEqual(servo.currentAngle, smallStep));
+    CHECK(nearlyEqual(servo.currentAngle, smallStep));
 }
 
 
@@ -97,8 +97,8 @@ void testLargeStepIsRateLimited() {
     servo.update(dt);
 
     // Not reachable in one step: moved exactly maxAngularVelocity * dt.
-    assert(nearlyEqual(servo.currentAngle, servo.maxAngularVelocity * dt));
-    assert(nearlyEqual(servo.angularVelocity, servo.maxAngularVelocity));
+    CHECK(nearlyEqual(servo.currentAngle, servo.maxAngularVelocity * dt));
+    CHECK(nearlyEqual(servo.angularVelocity, servo.maxAngularVelocity));
 }
 
 
@@ -111,11 +111,11 @@ void testSixtyDegreeStepTakesSpecTime() {
     while (std::abs(servo.targetAngle - servo.currentAngle) >= servo.angularDeadband) {
         servo.update(dt);
         elapsed += dt;
-        assert(elapsed < 1.0f);  // guard against a runaway loop
+        CHECK(elapsed < 1.0f);  // guard against a runaway loop
     }
 
     // Datasheet: 0.11 s per 60°. Allow ±10% for deadband and step quantization.
-    assert(elapsed > 0.099f && elapsed < 0.121f);
+    CHECK(elapsed > 0.099f && elapsed < 0.121f);
 }
 
 
@@ -128,8 +128,8 @@ void testSettlesOnTargetAndStops() {
     }
 
     // Within deadband of target and holding still.
-    assert(nearlyEqual(servo.currentAngle, 2.0f, servo.angularDeadband));
-    assert(nearlyEqual(servo.angularVelocity, 0.0f));
+    CHECK(nearlyEqual(servo.currentAngle, 2.0f, servo.angularDeadband));
+    CHECK(nearlyEqual(servo.angularVelocity, 0.0f));
 }
 
 
@@ -141,8 +141,8 @@ void testNegativeDirection() {
     servo.update(0.01f);
 
     // Moving toward a lower target produces negative velocity and decreasing angle.
-    assert(servo.currentAngle < 2.0f);
-    assert(servo.angularVelocity < 0.0f);
+    CHECK(servo.currentAngle < 2.0f);
+    CHECK(servo.angularVelocity < 0.0f);
 }
 
 
@@ -160,8 +160,8 @@ void testRetargetMidMotion() {
     servo.update(0.01f);
 
     // Servo immediately reverses; no momentum in a kinematic model.
-    assert(servo.currentAngle < midAngle);
-    assert(servo.angularVelocity < 0.0f);
+    CHECK(servo.currentAngle < midAngle);
+    CHECK(servo.angularVelocity < 0.0f);
 }
 
 

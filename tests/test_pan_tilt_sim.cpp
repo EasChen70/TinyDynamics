@@ -1,4 +1,4 @@
-#include <cassert>
+#include "TestCheck.h"
 #include <cmath>
 #include <iostream>
 
@@ -15,10 +15,10 @@ bool nearlyEqual(float a, float b, float eps = EPSILON) {
 void testDefaultsStartAtZero() {
     PanTiltSim sim;
 
-    assert(nearlyEqual(sim.panAngle(), 0.0f));
-    assert(nearlyEqual(sim.tiltAngle(), 0.0f));
-    assert(nearlyEqual(sim.panVelocity(), 0.0f));
-    assert(nearlyEqual(sim.tiltVelocity(), 0.0f));
+    CHECK(nearlyEqual(sim.panAngle(), 0.0f));
+    CHECK(nearlyEqual(sim.tiltAngle(), 0.0f));
+    CHECK(nearlyEqual(sim.panVelocity(), 0.0f));
+    CHECK(nearlyEqual(sim.tiltVelocity(), 0.0f));
 }
 
 
@@ -29,9 +29,9 @@ void testPanMovesIndependently() {
     sim.update(0.01f);
 
     // Only the pan axis was commanded: tilt must stay put.
-    assert(sim.panAngle() > 0.0f);
-    assert(nearlyEqual(sim.tiltAngle(), 0.0f));
-    assert(nearlyEqual(sim.tiltVelocity(), 0.0f));
+    CHECK(sim.panAngle() > 0.0f);
+    CHECK(nearlyEqual(sim.tiltAngle(), 0.0f));
+    CHECK(nearlyEqual(sim.tiltVelocity(), 0.0f));
 }
 
 
@@ -42,9 +42,9 @@ void testTiltMovesIndependently() {
     sim.update(0.01f);
 
     // Only the tilt axis was commanded: pan must stay put.
-    assert(sim.tiltAngle() > 0.0f);
-    assert(nearlyEqual(sim.panAngle(), 0.0f));
-    assert(nearlyEqual(sim.panVelocity(), 0.0f));
+    CHECK(sim.tiltAngle() > 0.0f);
+    CHECK(nearlyEqual(sim.panAngle(), 0.0f));
+    CHECK(nearlyEqual(sim.panVelocity(), 0.0f));
 }
 
 
@@ -56,8 +56,8 @@ void testBothAxesMove() {
 
     sim.update(0.01f);
 
-    assert(sim.panAngle() > 0.0f);
-    assert(sim.tiltAngle() > 0.0f);
+    CHECK(sim.panAngle() > 0.0f);
+    CHECK(sim.tiltAngle() > 0.0f);
 }
 
 
@@ -73,12 +73,12 @@ void testAxesSettleIndependently() {
     }
 
     // Tilt (0.1 rad at 9.5 rad/s ≈ 0.0105 s) has settled and stopped.
-    assert(nearlyEqual(sim.tiltAngle(), 0.1f, sim.tilt.angularDeadband));
-    assert(nearlyEqual(sim.tiltVelocity(), 0.0f));
+    CHECK(nearlyEqual(sim.tiltAngle(), 0.1f, sim.tilt.angularDeadband));
+    CHECK(nearlyEqual(sim.tiltVelocity(), 0.0f));
 
     // Pan (π rad ≈ 0.33 s) is still mid-travel at full speed.
-    assert(sim.panAngle() < PI * 0.5f);
-    assert(nearlyEqual(sim.panVelocity(), sim.pan.maxAngularVelocity));
+    CHECK(sim.panAngle() < PI * 0.5f);
+    CHECK(nearlyEqual(sim.panVelocity(), sim.pan.maxAngularVelocity));
 }
 
 
@@ -86,13 +86,13 @@ void testPanTargetClamps() {
     PanTiltSim sim;
 
     sim.setPanTarget(-1.0f);
-    assert(nearlyEqual(sim.pan.targetAngle, sim.pan.minAngle));
+    CHECK(nearlyEqual(sim.pan.targetAngle, sim.pan.minAngle));
 
     sim.setPanTarget(10.0f);
-    assert(nearlyEqual(sim.pan.targetAngle, sim.pan.maxAngle));
+    CHECK(nearlyEqual(sim.pan.targetAngle, sim.pan.maxAngle));
 
     sim.setPanTarget(1.0f);
-    assert(nearlyEqual(sim.pan.targetAngle, 1.0f));
+    CHECK(nearlyEqual(sim.pan.targetAngle, 1.0f));
 }
 
 
@@ -100,13 +100,13 @@ void testTiltTargetClamps() {
     PanTiltSim sim;
 
     sim.setTiltTarget(-1.0f);
-    assert(nearlyEqual(sim.tilt.targetAngle, sim.tilt.minAngle));
+    CHECK(nearlyEqual(sim.tilt.targetAngle, sim.tilt.minAngle));
 
     sim.setTiltTarget(10.0f);
-    assert(nearlyEqual(sim.tilt.targetAngle, sim.tilt.maxAngle));
+    CHECK(nearlyEqual(sim.tilt.targetAngle, sim.tilt.maxAngle));
 
     sim.setTiltTarget(1.0f);
-    assert(nearlyEqual(sim.tilt.targetAngle, 1.0f));
+    CHECK(nearlyEqual(sim.tilt.targetAngle, 1.0f));
 }
 
 
@@ -121,13 +121,13 @@ void testUpdateAdvancesBothAxes() {
 
     // Each axis advanced by exactly one rate-limited step, matching a lone servo.
     const float expectedStep = sim.pan.maxAngularVelocity * dt;
-    assert(nearlyEqual(sim.panAngle(), expectedStep));
-    assert(nearlyEqual(sim.tiltAngle(), expectedStep));
+    CHECK(nearlyEqual(sim.panAngle(), expectedStep));
+    CHECK(nearlyEqual(sim.tiltAngle(), expectedStep));
 
     sim.update(dt);
 
-    assert(nearlyEqual(sim.panAngle(), 2.0f * expectedStep));
-    assert(nearlyEqual(sim.tiltAngle(), 2.0f * expectedStep));
+    CHECK(nearlyEqual(sim.panAngle(), 2.0f * expectedStep));
+    CHECK(nearlyEqual(sim.tiltAngle(), 2.0f * expectedStep));
 }
 
 
@@ -148,10 +148,10 @@ void testMatchesStandaloneServos() {
         refPan.update(0.001f);
         refTilt.update(0.001f);
 
-        assert(nearlyEqual(sim.panAngle(), refPan.currentAngle));
-        assert(nearlyEqual(sim.tiltAngle(), refTilt.currentAngle));
-        assert(nearlyEqual(sim.panVelocity(), refPan.angularVelocity));
-        assert(nearlyEqual(sim.tiltVelocity(), refTilt.angularVelocity));
+        CHECK(nearlyEqual(sim.panAngle(), refPan.currentAngle));
+        CHECK(nearlyEqual(sim.tiltAngle(), refTilt.currentAngle));
+        CHECK(nearlyEqual(sim.panVelocity(), refPan.angularVelocity));
+        CHECK(nearlyEqual(sim.tiltVelocity(), refTilt.angularVelocity));
     }
 }
 
@@ -164,14 +164,14 @@ void testGettersMatchUnderlyingServos() {
     sim.update(0.01f);
 
     // Getters are pure views onto the servo state.
-    assert(nearlyEqual(sim.panAngle(), sim.pan.currentAngle));
-    assert(nearlyEqual(sim.tiltAngle(), sim.tilt.currentAngle));
-    assert(nearlyEqual(sim.panVelocity(), sim.pan.angularVelocity));
-    assert(nearlyEqual(sim.tiltVelocity(), sim.tilt.angularVelocity));
+    CHECK(nearlyEqual(sim.panAngle(), sim.pan.currentAngle));
+    CHECK(nearlyEqual(sim.tiltAngle(), sim.tilt.currentAngle));
+    CHECK(nearlyEqual(sim.panVelocity(), sim.pan.angularVelocity));
+    CHECK(nearlyEqual(sim.tiltVelocity(), sim.tilt.angularVelocity));
 
     // And they reflect real motion, not just zeros.
-    assert(sim.panVelocity() > 0.0f);
-    assert(sim.tiltVelocity() > 0.0f);
+    CHECK(sim.panVelocity() > 0.0f);
+    CHECK(sim.tiltVelocity() > 0.0f);
 }
 
 

@@ -1,4 +1,4 @@
-#include <cassert>
+#include "TestCheck.h"
 #include <cmath>
 #include <iostream>
 
@@ -18,7 +18,7 @@ void testZeroCoefficientHasNoEffect() {
 
     damping.apply(body);
 
-    assert(nearlyEqual(body.torque, 0.0f));
+    CHECK(nearlyEqual(body.torque, 0.0f));
 }
 
 
@@ -29,7 +29,7 @@ void testBodyAtRestReceivesNoTorque() {
     damping.apply(body);
 
     // Damping is proportional to velocity, so zero velocity means zero torque.
-    assert(nearlyEqual(body.torque, 0.0f));
+    CHECK(nearlyEqual(body.torque, 0.0f));
 }
 
 
@@ -42,8 +42,8 @@ void testDampingTorqueOpposesMotion() {
     damping.apply(spinningBackward);
 
     // torque = -c * omega
-    assert(nearlyEqual(spinningForward.torque, -1.0f));
-    assert(nearlyEqual(spinningBackward.torque, 1.0f));
+    CHECK(nearlyEqual(spinningForward.torque, -1.0f));
+    CHECK(nearlyEqual(spinningBackward.torque, 1.0f));
 }
 
 
@@ -55,7 +55,7 @@ void testDampingTorqueScalesWithVelocity() {
     damping.apply(slow);
     damping.apply(fast);
 
-    assert(nearlyEqual(fast.torque, 4.0f * slow.torque));
+    CHECK(nearlyEqual(fast.torque, 4.0f * slow.torque));
 }
 
 
@@ -67,7 +67,7 @@ void testDampingAccumulatesWithOtherTorques() {
     damping.apply(body);
 
     // Damping should add to, not replace, existing torque.
-    assert(nearlyEqual(body.torque, 3.0f));
+    CHECK(nearlyEqual(body.torque, 3.0f));
 }
 
 
@@ -79,8 +79,8 @@ void testVelocityDecreasesAfterIntegration() {
     body.integrate(0.1f);
 
     // alpha = -0.5 * 4 / 1 = -2, omega_new = 4 - 2 * 0.1 = 3.8
-    assert(nearlyEqual(body.angularVelocity, 3.8f));
-    assert(body.angularVelocity > 0.0f);
+    CHECK(nearlyEqual(body.angularVelocity, 3.8f));
+    CHECK(body.angularVelocity > 0.0f);
 }
 
 
@@ -98,13 +98,13 @@ void testRepeatedDampingDecaysTowardRest() {
         const float speed = std::abs(body.angularVelocity);
 
         // Speed must decrease monotonically and never flip sign.
-        assert(speed < previousSpeed);
-        assert(body.angularVelocity > 0.0f);
+        CHECK(speed < previousSpeed);
+        CHECK(body.angularVelocity > 0.0f);
         previousSpeed = speed;
     }
 
     // After 10 seconds with c = 1, omega ~ 10 * e^-10, effectively at rest.
-    assert(std::abs(body.angularVelocity) < 1e-3f);
+    CHECK(std::abs(body.angularVelocity) < 1e-3f);
 }
 
 
@@ -115,8 +115,8 @@ void testDampingDoesNotAffectPositionDirectly() {
     damping.apply(body);
 
     // apply() only queues torque; position changes only through integrate().
-    assert(nearlyEqual(body.angularPosition, 1.5f));
-    assert(nearlyEqual(body.angularVelocity, 2.0f));
+    CHECK(nearlyEqual(body.angularPosition, 1.5f));
+    CHECK(nearlyEqual(body.angularVelocity, 2.0f));
 }
 
 

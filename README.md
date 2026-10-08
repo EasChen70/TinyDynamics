@@ -23,7 +23,15 @@ cmake -S . -B build
 cmake --build build --config Debug
 ```
 
-Run the pan/tilt simulation tests:
+Run all C++ tests:
+
+```bash
+ctest --test-dir build -C Debug --output-on-failure
+```
+
+Tests use a `CHECK` macro (`tests/TestCheck.h`) instead of `assert`, so they also verify behavior in Release builds (`-C Release`).
+
+Run a single test executable directly:
 
 ```bash
 build\Debug\test_pan_tilt_sim.exe

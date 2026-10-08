@@ -1,4 +1,4 @@
-#include <cassert>
+#include "TestCheck.h"
 #include <cmath>
 #include <iostream>
 
@@ -8,11 +8,11 @@ void testDefaultConstructor() {
     // Default mass, position, velocity, and force are initialized correctly
     Particle p;
 
-    assert(std::abs(p.mass - 1.0f) < 1e-6f);
-    assert(std::abs(p.inverseMass - 1.0f) < 1e-6f);
-    assert(p.position.nearlyEqual(Vec2(0.0f, 0.0f)));
-    assert(p.velocity.nearlyEqual(Vec2(0.0f, 0.0f)));
-    assert(p.force.nearlyEqual(Vec2(0.0f, 0.0f)));
+    CHECK(std::abs(p.mass - 1.0f) < 1e-6f);
+    CHECK(std::abs(p.inverseMass - 1.0f) < 1e-6f);
+    CHECK(p.position.nearlyEqual(Vec2(0.0f, 0.0f)));
+    CHECK(p.velocity.nearlyEqual(Vec2(0.0f, 0.0f)));
+    CHECK(p.force.nearlyEqual(Vec2(0.0f, 0.0f)));
 }
 
 void testCustomConstructor() {
@@ -23,11 +23,11 @@ void testCustomConstructor() {
         Vec2(0.5f, 0.5f)
     );
 
-    assert(std::abs(p.mass - 2.0f) < 1e-6f);
-    assert(std::abs(p.inverseMass - 0.5f) < 1e-6f);
-    assert(p.position.nearlyEqual(Vec2(1.0f, 1.0f)));
-    assert(p.velocity.nearlyEqual(Vec2(0.5f, 0.5f)));
-    assert(p.force.nearlyEqual(Vec2(0.0f, 0.0f)));
+    CHECK(std::abs(p.mass - 2.0f) < 1e-6f);
+    CHECK(std::abs(p.inverseMass - 0.5f) < 1e-6f);
+    CHECK(p.position.nearlyEqual(Vec2(1.0f, 1.0f)));
+    CHECK(p.velocity.nearlyEqual(Vec2(0.5f, 0.5f)));
+    CHECK(p.force.nearlyEqual(Vec2(0.0f, 0.0f)));
 }
 
 void testSetMass() {
@@ -36,9 +36,9 @@ void testSetMass() {
     p.setMass(4.0f);
 
     // Mass and inverse mass should remain consistent
-    assert(std::abs(p.mass - 4.0f) < 1e-6f);
-    assert(std::abs(p.inverseMass - 0.25f) < 1e-6f);
-    assert(std::abs((p.mass * p.inverseMass) - 1.0f) < 1e-6f);
+    CHECK(std::abs(p.mass - 4.0f) < 1e-6f);
+    CHECK(std::abs(p.inverseMass - 0.25f) < 1e-6f);
+    CHECK(std::abs((p.mass * p.inverseMass) - 1.0f) < 1e-6f);
 }
 
 void testForceAccumulation() {
@@ -48,12 +48,12 @@ void testForceAccumulation() {
     p.applyForce(Vec2(1.0f, 0.0f));
     p.applyForce(Vec2(0.0f, 2.0f));
 
-    assert(p.force.nearlyEqual(Vec2(1.0f, 2.0f)));
+    CHECK(p.force.nearlyEqual(Vec2(1.0f, 2.0f)));
 
     // Negative forces should subtract from the accumulated force
     p.applyForce(Vec2(-0.5f, -1.0f));
 
-    assert(p.force.nearlyEqual(Vec2(0.5f, 1.0f)));
+    CHECK(p.force.nearlyEqual(Vec2(0.5f, 1.0f)));
 }
 
 void testClearForces() {
@@ -67,9 +67,9 @@ void testClearForces() {
     p.clearForces();
 
     // Clearing forces should only reset the force accumulator
-    assert(p.force.nearlyEqual(Vec2(0.0f, 0.0f)));
-    assert(p.position.nearlyEqual(Vec2(2.0f, 3.0f)));
-    assert(p.velocity.nearlyEqual(Vec2(4.0f, 5.0f)));
+    CHECK(p.force.nearlyEqual(Vec2(0.0f, 0.0f)));
+    CHECK(p.position.nearlyEqual(Vec2(2.0f, 3.0f)));
+    CHECK(p.velocity.nearlyEqual(Vec2(4.0f, 5.0f)));
 }
 
 void testMotionWithoutForce() {
@@ -83,10 +83,10 @@ void testMotionWithoutForce() {
     p.integrate(dt);
 
     // Without force, velocity should stay constant
-    assert(p.velocity.nearlyEqual(Vec2(1.0f, 1.0f)));
+    CHECK(p.velocity.nearlyEqual(Vec2(1.0f, 1.0f)));
 
     // Position should change according to the existing velocity
-    assert(p.position.nearlyEqual(Vec2(1.0f, 1.0f)));
+    CHECK(p.position.nearlyEqual(Vec2(1.0f, 1.0f)));
 }
 
 void testMotionWithForce() {
@@ -103,10 +103,10 @@ void testMotionWithForce() {
     p.integrate(dt);
 
     // velocity = initial velocity + acceleration * dt
-    assert(p.velocity.nearlyEqual(Vec2(2.0f, 0.0f)));
+    CHECK(p.velocity.nearlyEqual(Vec2(2.0f, 0.0f)));
 
     // Semi-implicit Euler uses the updated velocity for position
-    assert(p.position.nearlyEqual(Vec2(2.0f, 0.0f)));
+    CHECK(p.position.nearlyEqual(Vec2(2.0f, 0.0f)));
 }
 
 void testForcesClearedAfterIntegration() {
@@ -122,7 +122,7 @@ void testForcesClearedAfterIntegration() {
     p.integrate(dt);
 
     // After integration, forces should be cleared
-    assert(p.force.nearlyEqual(Vec2(0.0f, 0.0f)));
+    CHECK(p.force.nearlyEqual(Vec2(0.0f, 0.0f)));
 }
 
 void testForceDoesNotPersist() {
@@ -136,15 +136,15 @@ void testForceDoesNotPersist() {
     p.applyForce(Vec2(1.0f, 0.0f));
     p.integrate(1.0f);
 
-    assert(p.velocity.nearlyEqual(Vec2(1.0f, 0.0f)));
-    assert(p.position.nearlyEqual(Vec2(1.0f, 0.0f)));
+    CHECK(p.velocity.nearlyEqual(Vec2(1.0f, 0.0f)));
+    CHECK(p.position.nearlyEqual(Vec2(1.0f, 0.0f)));
 
     // No new force is applied during the second step
     p.integrate(1.0f);
 
     // Velocity should remain constant because the old force was cleared
-    assert(p.velocity.nearlyEqual(Vec2(1.0f, 0.0f)));
-    assert(p.position.nearlyEqual(Vec2(2.0f, 0.0f)));
+    CHECK(p.velocity.nearlyEqual(Vec2(1.0f, 0.0f)));
+    CHECK(p.position.nearlyEqual(Vec2(2.0f, 0.0f)));
 }
 
 void testMassAffectsAcceleration() {
@@ -161,8 +161,8 @@ void testMassAffectsAcceleration() {
     heavyParticle.integrate(1.0f);
 
     // The lighter particle should accelerate more
-    assert(lightParticle.velocity.nearlyEqual(Vec2(4.0f, 0.0f)));
-    assert(heavyParticle.velocity.nearlyEqual(Vec2(2.0f, 0.0f)));
+    CHECK(lightParticle.velocity.nearlyEqual(Vec2(4.0f, 0.0f)));
+    CHECK(heavyParticle.velocity.nearlyEqual(Vec2(2.0f, 0.0f)));
 }
 
 int main() {

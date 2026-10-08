@@ -1,4 +1,4 @@
-#include <cassert>
+#include "TestCheck.h"
 #include <cmath>
 #include <iostream>
 
@@ -15,11 +15,11 @@ void testDefaultConstructor() {
     RotationalBody body;
 
     // A default body starts at rest with unit inertia and no applied torque.
-    assert(nearlyEqual(body.inertia, 1.0f));
-    assert(nearlyEqual(body.inverseInertia, 1.0f));
-    assert(nearlyEqual(body.angularPosition, 0.0f));
-    assert(nearlyEqual(body.angularVelocity, 0.0f));
-    assert(nearlyEqual(body.torque, 0.0f));
+    CHECK(nearlyEqual(body.inertia, 1.0f));
+    CHECK(nearlyEqual(body.inverseInertia, 1.0f));
+    CHECK(nearlyEqual(body.angularPosition, 0.0f));
+    CHECK(nearlyEqual(body.angularVelocity, 0.0f));
+    CHECK(nearlyEqual(body.torque, 0.0f));
 }
 
 
@@ -31,11 +31,11 @@ void testCustomConstructor() {
     );
 
     // Constructor should preserve the supplied rotational state.
-    assert(nearlyEqual(body.inertia, 2.0f));
-    assert(nearlyEqual(body.inverseInertia, 0.5f));
-    assert(nearlyEqual(body.angularPosition, 1.0f));
-    assert(nearlyEqual(body.angularVelocity, 0.5f));
-    assert(nearlyEqual(body.torque, 0.0f));
+    CHECK(nearlyEqual(body.inertia, 2.0f));
+    CHECK(nearlyEqual(body.inverseInertia, 0.5f));
+    CHECK(nearlyEqual(body.angularPosition, 1.0f));
+    CHECK(nearlyEqual(body.angularVelocity, 0.5f));
+    CHECK(nearlyEqual(body.torque, 0.0f));
 }
 
 
@@ -45,9 +45,9 @@ void testSetInertia() {
     body.setInertia(4.0f);
 
     // Inertia and inverse inertia must remain reciprocal.
-    assert(nearlyEqual(body.inertia, 4.0f));
-    assert(nearlyEqual(body.inverseInertia, 0.25f));
-    assert(nearlyEqual(body.inertia * body.inverseInertia, 1.0f));
+    CHECK(nearlyEqual(body.inertia, 4.0f));
+    CHECK(nearlyEqual(body.inverseInertia, 0.25f));
+    CHECK(nearlyEqual(body.inertia * body.inverseInertia, 1.0f));
 }
 
 
@@ -58,12 +58,12 @@ void testTorqueAccumulation() {
     body.applyTorque(3.0f);
     body.applyTorque(2.0f);
 
-    assert(nearlyEqual(body.torque, 5.0f));
+    CHECK(nearlyEqual(body.torque, 5.0f));
 
     // Opposing torque should reduce the accumulated net torque.
     body.applyTorque(-1.5f);
 
-    assert(nearlyEqual(body.torque, 3.5f));
+    CHECK(nearlyEqual(body.torque, 3.5f));
 }
 
 
@@ -74,9 +74,9 @@ void testClearTorque() {
     body.clearTorque();
 
     // Clearing torque should not modify the body's rotational state.
-    assert(nearlyEqual(body.torque, 0.0f));
-    assert(nearlyEqual(body.angularPosition, 0.0f));
-    assert(nearlyEqual(body.angularVelocity, 0.0f));
+    CHECK(nearlyEqual(body.torque, 0.0f));
+    CHECK(nearlyEqual(body.angularPosition, 0.0f));
+    CHECK(nearlyEqual(body.angularVelocity, 0.0f));
 }
 
 
@@ -90,10 +90,10 @@ void testMotionWithoutTorque() {
     body.integrate(1.0f);
 
     // With zero net torque, angular velocity remains constant.
-    assert(nearlyEqual(body.angularVelocity, 2.0f));
+    CHECK(nearlyEqual(body.angularVelocity, 2.0f));
 
     // Position advances according to the existing angular velocity.
-    assert(nearlyEqual(body.angularPosition, 2.0f));
+    CHECK(nearlyEqual(body.angularPosition, 2.0f));
 }
 
 
@@ -109,11 +109,11 @@ void testMotionWithTorque() {
 
     // alpha = torque / inertia = 4 / 2 = 2 rad/s^2.
     // Therefore omega_new = 0 + 2 * 1 = 2 rad/s.
-    assert(nearlyEqual(body.angularVelocity, 2.0f));
+    CHECK(nearlyEqual(body.angularVelocity, 2.0f));
 
     // Semi-implicit Euler uses the updated angular velocity:
     // theta_new = 0 + 2 * 1 = 2 radians.
-    assert(nearlyEqual(body.angularPosition, 2.0f));
+    CHECK(nearlyEqual(body.angularPosition, 2.0f));
 }
 
 
@@ -124,8 +124,8 @@ void testNegativeTorque() {
     body.integrate(1.0f);
 
     // Negative torque produces negative angular acceleration and rotation.
-    assert(nearlyEqual(body.angularVelocity, -2.0f));
-    assert(nearlyEqual(body.angularPosition, -2.0f));
+    CHECK(nearlyEqual(body.angularVelocity, -2.0f));
+    CHECK(nearlyEqual(body.angularPosition, -2.0f));
 }
 
 
@@ -136,7 +136,7 @@ void testTorqueClearedAfterIntegration() {
     body.integrate(1.0f);
 
     // Applied torque belongs only to the current simulation step.
-    assert(nearlyEqual(body.torque, 0.0f));
+    CHECK(nearlyEqual(body.torque, 0.0f));
 }
 
 
@@ -147,15 +147,15 @@ void testTorqueDoesNotPersist() {
     body.applyTorque(1.0f);
     body.integrate(1.0f);
 
-    assert(nearlyEqual(body.angularVelocity, 1.0f));
-    assert(nearlyEqual(body.angularPosition, 1.0f));
+    CHECK(nearlyEqual(body.angularVelocity, 1.0f));
+    CHECK(nearlyEqual(body.angularPosition, 1.0f));
 
     // No torque is applied during the second step.
     body.integrate(1.0f);
 
     // Angular velocity stays constant because the old torque was cleared.
-    assert(nearlyEqual(body.angularVelocity, 1.0f));
-    assert(nearlyEqual(body.angularPosition, 2.0f));
+    CHECK(nearlyEqual(body.angularVelocity, 1.0f));
+    CHECK(nearlyEqual(body.angularPosition, 2.0f));
 }
 
 
@@ -173,8 +173,8 @@ void testInertiaAffectsAngularAcceleration() {
     highInertia.integrate(1.0f);
 
     // alpha = torque / inertia, so larger inertia means less acceleration.
-    assert(nearlyEqual(lowInertia.angularVelocity, 4.0f));
-    assert(nearlyEqual(highInertia.angularVelocity, 2.0f));
+    CHECK(nearlyEqual(lowInertia.angularVelocity, 4.0f));
+    CHECK(nearlyEqual(highInertia.angularVelocity, 2.0f));
 }
 
 
