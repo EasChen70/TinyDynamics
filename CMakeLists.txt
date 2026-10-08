@@ -25,6 +25,11 @@ if(TD_BUILD_TESTS)
     )
     target_link_libraries(test_vec2 PRIVATE tinydynamics)
 
+    add_executable(test_vec3
+        tests/test_vec3.cpp
+    )
+    target_link_libraries(test_vec3 PRIVATE tinydynamics)
+
     add_executable(test_particle
         tests/test_particle.cpp
     )
