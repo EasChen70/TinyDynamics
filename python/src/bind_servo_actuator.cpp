@@ -1,7 +1,7 @@
 #include <pybind11/pybind11.h>
 
 #include "bindings.h"
-#include "td/ServoActuator.h"
+#include "td/actuators/ServoActuator.h"
 
 namespace py = pybind11;
 

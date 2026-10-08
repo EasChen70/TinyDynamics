@@ -41,7 +41,7 @@ struct ServoActuator {
     float angularVelocity = 0.0f;
 
     void setTargetAngle(float angle) {
-        // Clamp to mechanical travel. std::clamp replaces the if/else ladder.
+        // Clamp to mechanical travel so update() never chases an unreachable angle.
         targetAngle = std::clamp(angle, minAngle, maxAngle);
     }
 

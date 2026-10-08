@@ -2,8 +2,8 @@
 #include <cmath>
 #include <iostream>
 
-#include "td/Damping.h"
-#include "td/RotationalBody.h"
+#include "td/physics/Damping.h"
+#include "td/physics/RotationalBody.h"
 
 constexpr float EPSILON = 1e-6f;
 

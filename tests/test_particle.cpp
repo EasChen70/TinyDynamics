@@ -2,7 +2,7 @@
 #include <cmath>
 #include <iostream>
 
-#include "td/Particle.h"
+#include "td/physics/Particle.h"
 
 void testDefaultConstructor() {
     // Default mass, position, velocity, and force are initialized correctly

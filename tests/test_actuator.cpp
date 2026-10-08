@@ -2,7 +2,7 @@
 #include <cmath>
 #include <iostream>
 
-#include "td/ServoActuator.h"
+#include "td/actuators/ServoActuator.h"
 
 constexpr float EPSILON = 1e-5f;
 constexpr float PI      = 3.14159f;

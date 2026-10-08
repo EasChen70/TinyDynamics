@@ -1,6 +1,15 @@
 #pragma once
 #include <cassert>
 
+// Single-axis rigid body: the rotational counterpart of Particle.
+//
+// Per time step:
+//   1. applyTorque() any number of times (including from AngularDamping).
+//   2. integrate(dt) advances angular velocity and position, then clears torque.
+//
+// Inertia must be > 0; change it through setInertia() so inverseInertia
+// stays in sync. Uses the same semi-implicit Euler scheme as Particle.
+
 struct RotationalBody{
     float angularPosition = 0.0f; //radians
     float angularVelocity = 0.0f; //radians per second

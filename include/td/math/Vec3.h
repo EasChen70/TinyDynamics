@@ -3,6 +3,9 @@
 #include <cassert>
 #include <cmath>
 
+// 3D float vector. Same API and conventions as Vec2; see Vec2.h.
+// Not yet used by any body type; intended for future 3D primitives.
+
 struct Vec3 {
     float x = 0.0f;
     float y = 0.0f;
@@ -65,6 +68,7 @@ struct Vec3 {
         return std::sqrt(lengthSquared());
     }
 
+    // A (near-)zero vector returns zero, matching Vec2.
     Vec3 normalized() const {
         const float len = length();
 
@@ -79,6 +83,7 @@ struct Vec3 {
         return x * other.x + y * other.y + z * other.z;
     }
 
+    // Right-handed: x.cross(y) == z.
     Vec3 cross(const Vec3& other) const {
         return {y * other.z - z * other.y,
                 z * other.x - x * other.z,

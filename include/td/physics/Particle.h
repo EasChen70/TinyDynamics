@@ -1,7 +1,16 @@
 #pragma once
 
 #include <cassert>
-#include "td/Vec2.h"
+#include "td/math/Vec2.h"
+
+// 2D point mass.
+//
+// Per time step:
+//   1. applyForce() any number of times; forces accumulate.
+//   2. integrate(dt) advances velocity and position, then clears forces.
+//
+// Mass must be > 0. inverseMass is cached so integrate() multiplies
+// instead of divides; always change mass through setMass() to keep it in sync.
 
 struct Particle {
     float mass;
@@ -38,10 +47,9 @@ struct Particle {
         inverseMass = 1.0f / newMass;
     }
 
-    /* 
-    integrating a particle refers to using calculus or numerical methods to calculate 
-    how a particle's position, velocity, and acceleration change over time
-    */
+    // Semi-implicit (symplectic) Euler: update velocity first, then move
+    // position with the new velocity. More stable than explicit Euler for
+    // oscillating systems at the same dt.
     void integrate(float dt) {
         assert(dt > 0.0f);
 

@@ -1,7 +1,13 @@
 #pragma once
 
 #include <cassert>
-#include "td/RotationalBody.h"
+#include "td/physics/RotationalBody.h"
+
+// Viscous damping torque for a RotationalBody (tau = -c * omega).
+//
+// Call apply(body) each step before body.integrate(dt); integrate() clears
+// accumulated torque, so damping applied after it is lost.
+// Coefficient must be >= 0 (negative values would add energy).
 
 struct AngularDamping {
     float coefficient = 0.0f; // Damping coefficient

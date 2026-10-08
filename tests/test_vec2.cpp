@@ -2,7 +2,7 @@
 #include <iostream>
 #include <cmath>
 
-#include "td/Vec2.h"
+#include "td/math/Vec2.h"
 
 void testConstructors(){
     Vec2 a;

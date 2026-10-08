@@ -2,7 +2,7 @@
 #include <cmath>
 #include <iostream>
 
-#include "td/RotationalBody.h"
+#include "td/physics/RotationalBody.h"
 
 constexpr float EPSILON = 1e-6f;
 

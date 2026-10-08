@@ -2,7 +2,7 @@
 #include <cmath>
 #include <iostream>
 
-#include "td/PanTiltSim.h"
+#include "td/actuators/PanTiltSim.h"
 
 constexpr float EPSILON = 1e-5f;
 constexpr float PI      = 3.14159f;

@@ -1,7 +1,7 @@
 #include <pybind11/pybind11.h>
 
 #include "bindings.h"
-#include "td/PanTiltSim.h"
+#include "td/actuators/PanTiltSim.h"
 
 namespace py = pybind11;
 

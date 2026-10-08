@@ -1,6 +1,6 @@
 #pragma once
 
-#include "td/ServoActuator.h"
+#include "td/actuators/ServoActuator.h"
 
 // PanTiltSim V1
 // Composes two ServoActuators into one simulated pan/tilt unit.
